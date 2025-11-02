@@ -1,8 +1,9 @@
-#/!bin/bash
+#!/bin/bash
+if [ "$(id -u)" -ne 0 ]; then 
+	echo "root permissions required"
+	exit 1
+fi
 
-count=0
-command=$(find /etc -type f)
-for file in $command; do
-	count=$((count + 1))
-done
-echo "The amount of files in etc/ is: $count"
+count=$(find /etc -type f | wc -l)
+
+echo "The amount of files in /etc/ is: $count" 
