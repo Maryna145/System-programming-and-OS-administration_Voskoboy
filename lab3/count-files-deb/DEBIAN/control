@@ -1,0 +1,8 @@
+Package: count-files
+Version: 1.0
+Section: utils
+Priority: optional
+Architecture: all
+Installed-Size: 4
+Maintainer: maryna
+Description: script that count files in /etc
