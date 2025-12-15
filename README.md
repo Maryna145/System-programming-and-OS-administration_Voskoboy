@@ -33,7 +33,7 @@ sudo ./count_files.sh
 
 ## 📁 Lab 2 — RPM Package
 
-**Мета:** Package the script from Lab 1 (`count_files.sh`) into an RPM package.
+**Objective:** Package the script from Lab 1 (`count_files.sh`) into an RPM package.
 
 ### Files for the package
 
