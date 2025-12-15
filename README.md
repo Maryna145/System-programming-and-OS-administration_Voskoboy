@@ -1,15 +1,14 @@
 # System Programming and OS Administration
 
-Репозиторій містить лабораторні роботи з курсу **"Системне програмування та адміністрування ОС"**.
-
+This repository contains the laboratory works for the course "System Programming and OS Administration".
 ---
 
-## 📁 Lab 1 — Bash скрипт для підрахунку файлів у /etc
+## 📁 Lab 1 — Bash script to count files in /etc 
 
-**Мета:** створити bash скрипт, який підраховує кількість файлів у `/etc`.  
+**Objective:** Create a bash script that counts the number of files in /etc. 
 
-### Файл
-- `count_files.sh` — скрипт з перевіркою прав root.  
+### File
+- `count_files.sh` — The script, including root privilege check.  
 
 ```bash
 #!/bin/bash
@@ -23,7 +22,7 @@ count=$(find /etc -type f | wc -l)
 echo "The amount of files in /etc/ is: $count"
 ```
 
-### Приклад виконання
+### Execution
 
 ```bash
 sudo ./count_files.sh
@@ -32,52 +31,52 @@ sudo ./count_files.sh
 
 ---
 
-## 📁 Lab 2 — RPM пакет
+## 📁 Lab 2 — RPM Package
 
-**Мета:** упакувати скрипт Lab 1 (`count_files.sh`) у RPM пакет на Ubuntu.
+**Мета:** Package the script from Lab 1 (`count_files.sh`) into an RPM package.
 
-### Файли для пакету
+### Files for the package
 
-- `count_files.sh` — bash скрипт для підрахунку файлів у `/etc`
-- `count_files.tar.gz` — tarball зі скриптом (джерела для пакету)
+- `count_files.sh` — bash script to count files in `/etc`
+- `count_files.tar.gz` — tarball with the script (sources for the package)
 
-### Створення структури та tarball
+### Creating Structure and Tarball
 
 ```bash
 mkdir -p ~/rpmbuild/SOURCES ~/rpmbuild/SPECS
 tar czf ~/rpmbuild/SOURCES/count_files.tar.gz count_files.sh
 ```
 
-> Створюємо структуру для RPM (`SOURCES` і `SPECS`) і архівуємо скрипт.
+> Creating the RPM structure (`SOURCES` and `SPECS`) and archiving the script.
 
-### Збірка RPM
+### Building the RPM
 
 ```bash
 rpmbuild -ba ~/rpmbuild/SPECS/count-files.spec
 ls ~/rpmbuild/RPMS/noarch
 ```
 
-**Результат:**
+**Result:**
 
 ```
 count_files-1-1.noarch.rpm
 ```
 
-> Команда `rpmbuild -ba` зібрала пакет у директорії `~/rpmbuild/RPMS/noarch`.
+> The `rpmbuild -ba` command built the package in the `~/rpmbuild/RPMS/noarch` directory.
 
-### Встановлення пакету
+### Installing the package
 
 ```bash
 sudo rpm -i ~/rpmbuild/RPMS/noarch/count_files-1-1.noarch.rpm
 ```
 
-### Перевірка скрипта
+### Script verification
 
 ```bash
 sudo count_files
 ```
 
-**Вивід:**
+**Output:**
 
 ```
 The amount of files in /etc/ is: 1679
@@ -85,11 +84,11 @@ The amount of files in /etc/ is: 1679
 
 ---
 
-## 📁 Lab 3 — DEB пакет
+## 📁 Lab 3 — DEB Package
 
-**Мета:** упакувати скрипт Lab 1 (`count_files.sh`) у DEB пакет на Ubuntu.
+**Objective:** Package the Lab 1 script  (`count_files.sh`)  into a DEB package.
 
-### Структура пакету
+### Package structure
 
 ```
 count-files-deb/
@@ -100,23 +99,23 @@ count-files-deb/
             count_files
 ```
 
-### Команди для створення і встановлення пакету
+### Commands for package creation and installation
 
-1) **Створюємо каталоги пакету**
+1) **Creating package directories**
 
 ```bash
 mkdir -p count-files-deb/DEBIAN
 mkdir -p count-files-deb/usr/bin
 ```
 
-2) **Створюємо скрипт і робимо його виконуваним**
+2) **Creating the script and making it executable**
 
 ```bash
 nano count-files-deb/usr/bin/count_files
 chmod +x count-files-deb/usr/bin/count_files
 ```
 
-- Вміст `count_files` (Lab 1):
+- Content of `count_files` (Lab 1):
 
 ```bash
 #!/bin/bash
@@ -130,13 +129,13 @@ count=$(find /etc -type f | wc -l)
 echo "The amount of files in /etc/ is: $count"
 ```
 
-3) **Створюємо control-файл**
+3) **Creating the control file**
 
 ```bash
 nano count-files-deb/DEBIAN/control
 ```
 
-Вміст `control`:
+Content of `control`:
 
 ```
 Package: count-files
@@ -150,27 +149,27 @@ Description: Bash script that counts files in /etc
 Depends: bash
 ```
 
-4) **Побудова пакету**
+4) **Building the package**
 
 ```bash
 dpkg-deb --build count-files-deb
 ```
 
-- Після виконання з’явиться файл `count-files-deb.deb`.
+- After execution. the`count-files-deb.deb` file will appear.
 
-5) **Встановлення і перевірка**
+5) **Installation and verification**
 
 ```bash
 sudo dpkg -i count-files-deb.deb
 sudo count_files
 ```
 
-**Очікуваний вивід:**
+**Expected output:**
 
 ```
 The amount of files in /etc/ is: 1679
 ```
 
-> Скрипт успішно запущено з правами root і підраховує кількість файлів у `/etc`.
+> The script was successfully executed with root privileges and counted the number of files in `/etc`.
 
 ---
