@@ -34,11 +34,7 @@ sudo ./count_files.sh
 ## 📁 Lab 2 — RPM Package
 
 **Objective:** Package the script from Lab 1 (`count_files.sh`) into an RPM package using Fedora Docker container.
-### Environment
-
 - RPM package was built and tested inside a Docker container
-
-- RPM-based distribution was used for validation
 
 ### Prepare files on host
 
