@@ -63,8 +63,11 @@ dnf install -y rpm-build
 ```
 mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 ```
-
-
+### Copy files to the build environment
+```bash
+cp /mnt/count_files.tar.gz /root/rpmbuild/SOURCES/
+cp /mnt/count_files.spec /root/rpmbuild/SPECS/
+```
 ### Build the RPM package
 ```bash
 rpmbuild -bb /root/rpmbuild/SPECS/count_files.spec
