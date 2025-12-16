@@ -33,56 +33,81 @@ sudo ./count_files.sh
 
 ## 📁 Lab 2 — RPM Package
 
-**Objective:** Package the script from Lab 1 (`count_files.sh`) into an RPM package.
+**Objective:** Package the script from Lab 1 (`count_files.sh`) into an RPM package using Fedora Docker container.
+### Environment
 
-### Files for the package
+- RPM package was built and tested inside a Docker container
+
+- RPM-based distribution was used for validation
+
+### Prepare files on host
 
 - `count_files.sh` — bash script to count files in `/etc`
 - `count_files.tar.gz` — tarball with the script (sources for the package)
+- `count_files.spec` — RPM spec file containing package metadata, build instructions, and installation paths
 
-### Creating Structure and Tarball
-
-```bash
-mkdir -p ~/rpmbuild/SOURCES ~/rpmbuild/SPECS
-tar czf ~/rpmbuild/SOURCES/count_files.tar.gz count_files.sh
-```
-
-> Creating the RPM structure (`SOURCES` and `SPECS`) and archiving the script.
-
-### Building the RPM
+### Start Fedora Docker container
 
 ```bash
-rpmbuild -ba ~/rpmbuild/SPECS/count-files.spec
-ls ~/rpmbuild/RPMS/noarch
+docker run -it -v $(pwd):/mnt fedora:latest bash
 ```
 
-**Result:**
+> Mounts the current host folder to /mnt inside the container.
 
-```
-count_files-1-1.noarch.rpm
-```
+## Inside the container
 
-> The `rpmbuild -ba` command built the package in the `~/rpmbuild/RPMS/noarch` directory.
-
-### Installing the package
+### Install RPM build tools
 
 ```bash
-sudo rpm -i ~/rpmbuild/RPMS/noarch/count_files-1-1.noarch.rpm
+dnf install -y rpm-build
 ```
 
-### Script verification
+### Create RPM build directories
 
+```
+mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+```
+
+
+### Build the RPM package
 ```bash
-sudo count_files
+rpmbuild -bb /root/rpmbuild/SPECS/count_files.spec
+```
+> The resulting RPM is located in:
+``` 
+/root/rpmbuild/RPMS/noarch/
 ```
 
-**Output:**
-
+### Copy the RPM back to host
+```bash
+cp /root/rpmbuild/RPMS/noarch/*.rpm /mnt/
 ```
-The amount of files in /etc/ is: 1679
-```
+> On the host, `count_files-1-1.noarch.rpm` is ready for installation and testing.
 
 ---
+### Verify the package
+Inside the container or after installing on the host:
+```bash
+rpm -ql count_files-1-1
+count_files
+```
+- Expected output 
+```bash
+/usr/local/bin/count_files
+```
+> Installed path may vary depending on spec configuration.
+### Execute the script 
+```bash
+count_files
+```
+- Expected output
+```bash
+The amount of files in /etc/ is: <number>
+```
+> The number may differ depending on the environment (container vs full host OS).
+
+---
+
 
 ## 📁 Lab 3 — DEB Package
 
