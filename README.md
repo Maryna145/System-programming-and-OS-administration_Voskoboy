@@ -111,7 +111,7 @@ The amount of files in /etc/ is: <number>
 ## 📁 Lab 3 — DEB Package
 
 **Objective:** Package the Lab 1 script  (`count_files.sh`)  into a DEB package.
-
+- DEB package was built and tested on Ubuntu
 ### Package structure
 
 ```
