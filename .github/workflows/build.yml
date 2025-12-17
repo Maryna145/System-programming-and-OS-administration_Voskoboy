@@ -9,7 +9,7 @@ on:
 jobs:
   build-rpm:
     runs-on: ubuntu-24.04
-    container: fedora:latest
+    container: fedora:40
     
     steps:
     - name: Checkout code
