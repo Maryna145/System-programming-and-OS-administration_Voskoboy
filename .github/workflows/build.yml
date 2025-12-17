@@ -29,15 +29,13 @@ jobs:
 
     - name: Build RPM Package
       run: |
-        mkdir -p lab4
         rpmbuild -bb ~/rpmbuild/SPECS/count_files.spec
-        cp ~/rpmbuild/RPMS/*/*.rpm lab4/
 
     - name: Upload RPM Artifact
       uses: actions/upload-artifact@v4
       with:
         name: rpm-package
-        path: lab4/*.rpm
+        path: /root/rpmbuild/RPMS/**/*.rpm
 
   build-deb:
     runs-on: ubuntu-24.04
@@ -50,12 +48,10 @@ jobs:
       run: chmod +x lab3/count-files-deb/usr/bin/count-files
 
     - name: Build DEB Package
-      run: |
-        mkdir -p lab4
-        dpkg-deb --build lab3/count-files-deb lab4/count_files.deb
+      run: dpkg-deb --build lab3/count-files-deb count_files.deb
 
     - name: Upload DEB Artifact
       uses: actions/upload-artifact@v4
       with:
         name: deb-package
-        path: lab4/*.deb
+        path: count_files.deb
