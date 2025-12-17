@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install RPM Dev Tools
-      run: dnf install -y rpm-build tar rpmdevtools
+      run: dnf install -y rpm-build tar rpmdevtools 
 
     - name: Setup RPM Build Tree
       run: rpmdev-setuptree
@@ -28,13 +28,16 @@ jobs:
       run: cp lab2/count_files.spec ~/rpmbuild/SPECS/
 
     - name: Build RPM Package
-      run: rpmbuild -bb ~/rpmbuild/SPECS/count_files.spec
+      run: |
+        mkdir -p lab4
+        rpmbuild -bb ~/rpmbuild/SPECS/count_files.spec
+        cp /root/rpmbuild/RPMS/*/*.rpm lab4/
 
     - name: Upload RPM Artifact
       uses: actions/upload-artifact@v4
       with:
         name: rpm-package
-        path: /root/rpmbuild/RPMS/noarch/*.rpm
+        path: lab4/*.rpm
 
   build-deb:
     runs-on: ubuntu-24.04
@@ -47,10 +50,12 @@ jobs:
       run: chmod +x lab3/count-files-deb/usr/bin/count-files
 
     - name: Build DEB Package
-      run: dpkg-deb --build lab3/count-files-deb count_files.deb
+      run: |
+        mkdir -p lab4
+        dpkg-deb --build lab3/count-files-deb lab4/count_files.deb
 
     - name: Upload DEB Artifact
       uses: actions/upload-artifact@v4
       with:
         name: deb-package
-        path: count_files.deb
+        path: lab4/*.deb
