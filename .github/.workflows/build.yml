@@ -1,0 +1,56 @@
+name: Build RPM and DEB
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-rpm:
+    runs-on: ubuntu-24.04
+    container: fedora:41
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install RPM Dev Tools
+      run: dnf install -y rpm-build tar rpmdevtools
+
+    - name: Setup RPM Build Tree
+      run: rpmdev-setuptree
+
+    - name: Create Source Archive
+      run: tar -czf ~/rpmbuild/SOURCES/count_files.tar.gz -C lab2 count_files.sh
+
+    - name: Copy Spec File
+      run: cp lab2/count_files.spec ~/rpmbuild/SPECS/
+
+    - name: Build RPM Package
+      run: rpmbuild -bb ~/rpmbuild/SPECS/count_files.spec
+
+    - name: Upload RPM Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: rpm-package
+        path: /root/rpmbuild/RPMS/noarch/*.rpm
+
+  build-deb:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Fix permisions
+      run: chmod +x lab3/count-files-deb/usr/bin/count-files
+
+    - name: Build DEB Package
+      run: dpkg-deb --build lab3/count-files-deb count_files.deb
+
+    - name: Upload DEB Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: deb-package
+        path: count_files.deb
