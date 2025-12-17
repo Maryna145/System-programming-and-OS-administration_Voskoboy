@@ -197,7 +197,6 @@ The amount of files in /etc/ is: 1679
 > The script was successfully executed with root privileges and counted the number of files in `/etc`.
 
 ---
----
 
 ## 📁 Lab 4 — CI/CD Automation (GitHub Actions)
 
