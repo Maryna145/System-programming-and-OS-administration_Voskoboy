@@ -197,3 +197,38 @@ The amount of files in /etc/ is: 1679
 > The script was successfully executed with root privileges and counted the number of files in `/etc`.
 
 ---
+---
+
+## 📁 Lab 4 — CI/CD Automation (GitHub Actions)
+
+**Objective:** Automate the build process of RPM and DEB packages using GitHub Actions. The pipeline triggers on every push to the `main` branch.
+
+### Workflow Configuration
+- **File:** `.github/workflows/build.yml`
+- **Triggers:** `push` to `main`, `pull_request` to `main`.
+
+### Pipeline Architecture
+
+The workflow consists of two parallel jobs:
+
+#### 1. RPM Build (`build-rpm`)
+- **Environment:** Runs inside a **Fedora 39 Docker container** (`container: fedora:39`) running on an Ubuntu host.
+- **Steps:**
+  - Installs `rpm-build`, `rpmdevtools`.
+  - Sets up the build tree using `rpmdev-setuptree`.
+  - Archives sources from `lab2/`.
+  - Builds the package using `rpmbuild`.
+  - Uploads the artifact directly from the `/root/rpmbuild/RPMS/`
+
+#### 2. DEB Build (`build-deb`)
+- **Environment:** Runs natively on **Ubuntu 24.04**.
+- **Steps:**
+  - Uses the pre-existing structure from `lab3/count-files-deb`.
+  - Fixes execution permissions (`chmod +x`) to ensure the script runs correctly.
+  - Builds the package using `dpkg-deb`.
+  - Uploads the artifact directly from the working directory.
+
+### Results (Artifacts)
+The compiled packages are automatically uploaded as **GitHub Artifacts** and can be downloaded from the "Actions" tab after a successful build. 
+
+
