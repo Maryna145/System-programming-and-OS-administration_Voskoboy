@@ -18,14 +18,14 @@ pipeline {
             steps {
                 script {
                     echo "--- 1. Preparing Script ---"
-                    sh "chmod +x ${LAB3_DIR}/count-files-deb/usr/bin/count-files"
+                    sh "chmod +x ${LAB3_DIR}/count-files-deb/usr/bin/count_files"
                     
                     echo "--- 2. Building DEB Package ---"
                     sh "dpkg-deb --build ${LAB3_DIR}/count-files-deb"
                     echo "--- 3. Installing DEB Package ---"
                     sh "sudo dpkg -i --force-all ${LAB3_DIR}/count-files-deb.deb"                   
                     echo "--- 4. Testing Execution ---"
-                    sh "count-files"
+                    sh "count_files"
                 }
             }
         }
