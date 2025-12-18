@@ -294,7 +294,6 @@ To support this pipeline, the infrastructure from Lab 5 was updated:
 - **Docker Compose:** Mounted `/var/run/docker.sock` to allow the agent to spawn sibling containers (Docker-in-Docker).
 
 ### Pipeline Architecture (Jenkinsfile)
-The pipeline implements a hybrid build strategy:
 
 ### 1. DEB Stage (Native Ubuntu)
 Executes directly on the `jenkins-builder` agent (which is Debian/Ubuntu based).
