@@ -291,7 +291,7 @@ To support this pipeline, the infrastructure from Lab 5 was updated:
 
 - **Dockerfile:** Added `docker.io`, `sudo`, `rpm`, and `dpkg-dev` to the agent image. Configured passwordless sudo for the `jenkins` user.
 
-- **Docker Compose:** Mounted ё/var/run/docker.sockё to allow the agent to spawn sibling containers (Docker-in-Docker).
+- **Docker Compose:** Mounted `/var/run/docker.sock` to allow the agent to spawn sibling containers (Docker-in-Docker).
 
 ### Pipeline Architecture (Jenkinsfile)
 The pipeline implements a hybrid build strategy:
