@@ -23,7 +23,7 @@ pipeline {
                     echo "--- 2. Building DEB Package ---"
                     sh "dpkg-deb --build ${LAB3_DIR}/count-files-deb"
                     echo "--- 3. Installing DEB Package ---"
-                    sh "dpkg -i --force-all ${LAB3_DIR}/count-files-deb.deb"                   
+                    sh "sudo dpkg -i --force-all ${LAB3_DIR}/count-files-deb.deb"                   
                     echo "--- 4. Testing Execution ---"
                     sh "count-files"
                 }

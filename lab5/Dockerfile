@@ -11,5 +11,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     docker.io \
+    sudo \
     && rm -rf /var/lib/apt/lists/*
+RUN echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 WORKDIR /home/jenkins
