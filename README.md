@@ -283,4 +283,53 @@ This is a Unix agent
 Agent successfully connected and online.
 ```
 ---
+## 📁 Lab 6 — Jenkins CI/CD Pipeline (Multi-OS Support)
+**Objective:** Create a Jenkins Pipeline that utilizes a custom Docker Agent to build, install, and execute artifacts locally (DEB) and inside a dynamic container (RPM).
+
+### Infrastructure Updates (Lab 5 Extension)
+To support this pipeline, the infrastructure from Lab 5 was updated:
+
+- **Dockerfile:** Added `docker.io`, `sudo`, `rpm`, and `dpkg-dev` to the agent image. Configured passwordless sudo for the `jenkins` user.
+
+- **Docker Compose:** Mounted ё/var/run/docker.sockё to allow the agent to spawn sibling containers (Docker-in-Docker).
+
+### Pipeline Architecture (Jenkinsfile)
+The pipeline implements a hybrid build strategy:
+
+### 1. DEB Stage (Native Ubuntu)
+Executes directly on the `jenkins-builder` agent (which is Debian/Ubuntu based).
+
+- **Steps:**
+  - Prepares the script (`chmod +x`).
+  - Builds the package using `dpkg-deb`.
+  - Installs via `sudo dpkg -i`.
+  - Executes the installed command to verify logic.
+
+### 2. RPM Stage (Containerized Fedora)
+Since the agent cannot natively install RPMs, it spawns a temporary Fedora container.
+
+- **Method:** Uses the "Copy-Exec" pattern to handle file transfer in a Docker-in-Docker environment.
+- **Steps:**
+- Starts a background Fedora container (`docker run -d`).
+- Copies source files (`.tar.gz`, `.spec`) into the container using `docker cp`.
+- Builds the package inside via `docker exec` and `rpmbuild`.
+- Installs and verifies the package inside the container.
+- Cleans up (removes container).
+### Execution Results
+### 1. Before running, ensure the host's Docker socket is accessible:
+```bash
+sudo chmod 666 /var/run/docker.sock
+```
+### 2. The pipeline successfully verifies the script logic in two different environments simultaneously.
+- **Ubuntu Agent Output:**
+```bash
++ sudo count-files
+The amount of files in /etc/ is: 452
+```
+- **Fedora Container Output:**
+```bash
+[Fedora] Executing Script...
+The amount of files in /etc/ is: 352
+```
+The file count differs because the Agent is a heavier container with more tools installed, while the Fedora container is a minimal base image.
 
