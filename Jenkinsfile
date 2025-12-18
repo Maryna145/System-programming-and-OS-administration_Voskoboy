@@ -32,16 +32,20 @@ pipeline {
         stage('RPM: Build & Install') {
             steps {
                 script {
-                    echo "--- Launching Fedora Container ---"
+                    echo "--- Launching Fedora Container (Background) ---"
+                    sh "docker run -d --name fedora-builder fedora:latest tail -f /dev/null"
+                    echo "--- Copying Files to Container ---"
+                    sh "docker cp ${LAB2_DIR} fedora-builder:/root/"
+                    echo "--- Building inside Fedora ---"
                     def dockerCmd = """
-                        docker run --rm -v ${WORKSPACE}:/mnt fedora:latest /bin/bash -c '
+                        docker exec fedora-builder /bin/bash -c '
                             echo "[Fedora] Installing tools..."
                             dnf install -y rpm-build
                             echo "[Fedora] Creating build tree..."
                             mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
                             echo "[Fedora] Copying files..."
-                            cp /mnt/${LAB2_DIR}/count_files.tar.gz /root/rpmbuild/SOURCES/
-                            cp /mnt/${LAB2_DIR}/count_files.spec /root/rpmbuild/SPECS/
+                            cp /root/${LAB2_DIR}/count_files.tar.gz /root/rpmbuild/SOURCES/
+                            cp /root/${LAB2_DIR}/count_files.spec /root/rpmbuild/SPECS/
                             echo "[Fedora] Building RPM..."
                             rpmbuild -bb /root/rpmbuild/SPECS/count_files.spec
                             echo "[Fedora] Installing RPM..."
@@ -50,7 +54,12 @@ pipeline {
                             count_files
                         '
                     """
-                    sh dockerCmd
+                    try {
+                        sh dockerCmd
+                    } finally {
+                        echo "--- Cleanup ---"
+                        sh "docker rm -f fedora-builder"
+                    }
                 }
             }
         }
