@@ -228,7 +228,7 @@ The workflow consists of two parallel jobs:
   - Uploads the artifact directly from the working directory.
 
 ### Results (Artifacts)
-The compiled packages are automatically uploaded as **GitHub Artifacts** and can be downloaded from the "Actions" tab after a successful build. 
+#### The compiled packages are automatically uploaded as **GitHub Artifacts** and can be downloaded from the "Actions" tab after a successful build. 
 ---
 ## 📁 Lab 5 — Jenkins Infrastructure (Docker + SSH Agent)
 **Objective:** Create a Dockerfile and docker-compose setup to run Jenkins Master and a custom Ubuntu-based Builder agent, connected securely via SSH keys.
