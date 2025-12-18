@@ -229,5 +229,58 @@ The workflow consists of two parallel jobs:
 
 ### Results (Artifacts)
 The compiled packages are automatically uploaded as **GitHub Artifacts** and can be downloaded from the "Actions" tab after a successful build. 
+---
+## 📁 Lab 5 — Jenkins Infrastructure (Docker + SSH Agent)
+**Objective:** Create a Dockerfile and docker-compose setup to run Jenkins Master and a custom Ubuntu-based Builder agent, connected securely via SSH keys.
 
+**Files**
+- `Dockerfile` — Configuration for the `jenkins-builder` image (Ubuntu 24.04 + SSH Server + Build tools).
+- `docker-compose.yml` — Orchestrates both Master and Builder containers in a shared network.
+- `.env` — Stores the `SSH_PUB_KEY` variable (git-ignored for security).
+
+### 1. Security Setup (SSH Keys)
+Jenkins requires the private key in the legacy PEM format (starting with `-----BEGIN RSA PRIVATE KEY-----`).
+
+**Generate keys:**
+
+```bash
+ssh-keygen -t rsa -b 4096 -m PEM -f jenkins_key -N ""
+```
+> Generate RSA key in PEM format directly
+### 2. Configure Environment
+Create a `.env` file to inject the public key into the builder container.
+
+```bash
+nano .env
+```
+**Content:**
+```bash
+SSH_PUB_KEY=ssh-rsa AAAAB3NzaC... (copy content from jenkins_key.pub)
+```
+
+### 3. Execution
+Start the infrastructure:
+```bash
+docker compose up -d --build
+```
+### 4. Jenkins Configuration
+#### Add Credentials:
+- Go to `Manage Jenkins` -> `Credentials`.
+- Kind: SSH Username with private key.
+- Paste the entire content of `jenkins_key`, including header `-----BEGIN RSA PRIVATE KEY-----` and footer `-----END RSA PRIVATE KEY-----`.
+#### Add Node:
+- Name: `builder`
+- Remote root directory: `/home/jenkins`
+- Host: `jenkins-builder`
+- Launch method: Launch agents via SSH.
+- Credentials: Select the key created above.
+- Host Key Verification Strategy: Non verifying Verification Strategy.
+
+### Verification
+Check the node status in Jenkins UI or logs:
+```bash
+This is a Unix agent
+Agent successfully connected and online.
+```
+---
 
