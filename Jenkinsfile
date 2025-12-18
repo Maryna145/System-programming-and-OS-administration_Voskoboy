@@ -25,7 +25,7 @@ pipeline {
                     echo "--- 3. Installing DEB Package ---"
                     sh "sudo dpkg -i --force-all ${LAB3_DIR}/count-files-deb.deb"                   
                     echo "--- 4. Testing Execution ---"
-                    sh "count-files"
+                    sh "sudo count-files"
                 }
             }
         }
